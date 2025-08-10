@@ -153,6 +153,7 @@ from pygpt_net.tools.image_viewer import ImageViewer as ImageViewerTool
 from pygpt_net.tools.media_player import MediaPlayer as MediaPlayerTool
 from pygpt_net.tools.text_editor import TextEditor as TextEditorTool
 from pygpt_net.tools.html_canvas import HtmlCanvas as HtmlCanvasTool
+from pygpt_net.tools.network_diagnostics import NetworkDiagnosticsTool
 
 def run(**kwargs):
     """
@@ -436,6 +437,7 @@ def run(**kwargs):
     launcher.add_tool(AudioTranscriberTool())
     launcher.add_tool(CodeInterpreterTool())
     launcher.add_tool(HtmlCanvasTool())
+    launcher.add_tool(NetworkDiagnosticsTool())
 
     # register custom tools
     tools = kwargs.get('tools', None)
