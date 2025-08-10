@@ -1,6 +1,6 @@
 import subprocess
-from PyQt5.QtWidgets import QAction
-from PyQt5.QtCore import QObject
+from PySide6.QtWidgets import QAction
+from PySide6.QtCore import QObject
 
 from .network_diagnostics.ui.dialogs import NetworkDiagnosticsDialog
 
