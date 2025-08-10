@@ -1,14 +1,14 @@
 import pytest
+import subprocess
 
 from types import SimpleNamespace
 
-# Assume direct import for test; adjust as needed for actual import path
-from src.pygpt_net.tools.network_diagnostics import NetworkDiagnosticsTool
+from pygpt_net.tools.network_diagnostics import NetworkDiagnosticsTool
 
 @pytest.fixture
 def tool():
-    # Tool expects no init args for testing run()
-    return NetworkDiagnosticsTool()
+    # For run() tests, window can be None
+    return NetworkDiagnosticsTool(None)
 
 def mock_run_success(cmd, stdout="success", stderr="", **kwargs):
     return SimpleNamespace(returncode=0, stdout=stdout, stderr=stderr)
@@ -26,7 +26,7 @@ def test_run_success(monkeypatch, tool, args, expected_cmd, success, output_key)
     def fake_run(cmd, **kwargs):
         assert cmd == expected_cmd
         return SimpleNamespace(returncode=0, stdout="mocked output", stderr="")
-    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(subprocess, "run", fake_run)
     result = tool.run(args)
     assert result["success"] is True
     assert "mocked output" in result["output"]
@@ -41,9 +41,10 @@ def test_run_failure(monkeypatch, tool, args, expected_cmd):
     def fake_run(cmd, **kwargs):
         assert cmd == expected_cmd
         return SimpleNamespace(returncode=1, stdout="", stderr="failure error")
-    monkeypatch.setattr("subprocess.run", fake_run)
+    monkeypatch.setattr(subprocess, "run", fake_run)
     result = tool.run(args)
     assert result["success"] is False
+    assert "Error running command:" in result["output"]
     assert "failure error" in result["output"]
 
 def test_missing_parameters(monkeypatch, tool):
