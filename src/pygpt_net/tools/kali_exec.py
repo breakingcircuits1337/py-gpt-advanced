@@ -9,7 +9,7 @@
 import subprocess
 from typing import Dict
 
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QMessageBox, QAction
 from pygpt_net.tools.base import BaseTool
 
 from .ui.dialogs import KaliControlDialog
