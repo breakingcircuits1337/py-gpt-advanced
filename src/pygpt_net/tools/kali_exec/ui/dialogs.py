@@ -44,7 +44,6 @@ class KaliControlDialog(QDialog):
             return
         result = self.tool.run({"cmd": cmd})
         output = result.get("output", "")
+        summary = result.get("summary", "")
         self.output_edit.setPlainText(output)
-        # Placeholder summary: first line, or message
-        first_line = output.splitlines()[0] if output.strip() else "Summary will appear here..."
-        self.summary_edit.setPlainText(first_line)
+        self.summary_edit.setPlainText(summary)

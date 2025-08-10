@@ -47,8 +47,27 @@ class KaliExecTool(BaseTool):
                 text=True
             )
             output = (proc.stdout or "") + ("\n" + proc.stderr if proc.stderr else "")
+            output = output.strip()
             success = proc.returncode == 0
-            return {"output": output.strip(), "success": success, "summary": ""}
+
+            # LLM-driven summarization
+            prompt = (
+                f"Summarize the results of the command `{cmd}`:\n"
+                "```\n"
+                f"{output}\n"
+                "```\n"
+                "Provide a concise summary, highlighting key successes or errors."
+            )
+            if (
+                hasattr(self.window, "core")
+                and hasattr(self.window.core, "llm")
+                and hasattr(self.window.core.llm, "complete")
+            ):
+                summary = self.window.core.llm.complete(prompt)
+            else:
+                summary = "LLM summarization unavailable."
+
+            return {"output": output, "success": success, "summary": summary}
         except Exception as e:
             return {"output": f"Exception: {str(e)}", "success": False, "summary": ""}
 
